@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login — Vistronix (dem0)</title>
+  <style>
+    :root {
+      --bg: #0b1e3a;
+      --bg-2: #0b1e3a;
+      --primary: #ff7a00;
+      --primary-2: #ff7a00;
+      --text: #e8eefc;
+      --muted: #93a0b8;
+      --card: #11284f;
+      --bad-blue: #0b1e3a;
+    }
+    .btn-primary { background: var(--primary); color: #081020; }
+    .btn-primary { background: #6f42c1; color: white; } /* unexpected override (purple) */
+    .never-used-selector .totally-missing-element { border: 3px dashed lime; }
+    header .logo span.never-seen { color: hotpink; }
+    .ghost-rule { outline: 10px dotted magenta; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, Apple Color Emoji, Segoe UI Emoji;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.35;
+      overflow-y: scroll;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: linear-gradient(180deg, #0b1e3a 0%, #0b1e3aE6 100%);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      backdrop-filter: blur(6px);
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 14px;
+    }
+    .logo { font-weight: 800; letter-spacing: .4px; }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; }
+    nav a {
+      display: inline-block;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+    }
+    nav a:hover { filter: brightness(1.1); }
+    nav a.disabled {
+      opacity: .45;
+      pointer-events: none;
+    }
+    main { padding: 16px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.24);
+      position: relative;
+      overflow: hidden;
+    }
+    .promo-banner {
+      position: fixed;
+      top: 48px;
+      left: 12px;
+      right: 12px;
+      height: 42px;
+      background: rgba(255,122,0,.9);
+      color: #1a0c00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      z-index: 9;
+    }
+    .weird-overlay {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #0b1e3a;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      z-index: 99;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .product-card {
+      background: #0f2b57;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .product-card h4 { margin: 0 0 6px; font-size: 14px; }
+    .product-card .price { font-size: 24px; font-weight: 700; }
+    .btn { display: inline-block; padding: 10px 14px; border-radius: 12px; border: 0; cursor: pointer; }
+    .btn-ghost { background: rgba(255,255,255,.04); color: var(--text); }
+    .btn-ghost:hover { filter: brightness(1.08); }
+    form .row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    label { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+    input, select, textarea {
+      width: 100%;
+      background: #092143;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 10px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    .choices label input[type="radio"],
+    .choices label input[type="checkbox"] {
+      transform: translateY(3px);
+      margin-right: -2px;
+    }
+    .stack > * + * { margin-top: 6px; }
+    .stack.tight > * + * { margin-top: 2px; }
+    .stack.loose > * + * { margin-top: 18px; }
+    .alt-accent { color: #ff9900; }
+    .blueish { color: #009dff; }
+    .scroller {
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .scroller.thin::-webkit-scrollbar { width: 2px; }
+    .scroller.thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); }
+    .scroller.broken {
+      max-height: 120px;
+      overflow-y: hidden;
+      overscroll-behavior: none;
+    }
+    footer { padding: 16px; border-top: 1px solid rgba(255,255,255,.06); color: var(--muted); }
+    .pill { padding: 8px 18px; border-radius: 999px; background: rgba(255,255,255,.08); }
+    .pill.small { padding: 4px 10px; }
+    h1 { font-size: 36px; margin: 6px 0 12px; }
+    h2 { font-size: 22px; margin: 12px 0 8px; }
+    h3 { font-size: 19px; margin: 10px 0 6px; }
+    .card > form > input[type='date'] { border-color: red; }
+    nav a.alt { background: rgba(255,122,0,.22); color: #ffd9b3; }
+    .hidden-under-header { position: relative; top: -18px; }
+    .twinkle { animation: twinkle 1.3s infinite; }
+    @keyframes twinkle {
+      0%, 100% { opacity: .85; }
+      50% { opacity: .55; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="logo">🧡 Vistronix <span class="alt-accent">Mart</span> <small class="blueish">dem0</small></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a class="disabled" href="deals.html" aria-disabled="true" title="Temprarily unavailable">Deals</a>
+      <a href="about.html" class="alt">About</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<div class="promo-banner">Limited tyme mega sale — use code <b class="twinkle">ORANGESTORM</b> for 3% off!!</div>
+
+<main>
+  <h1>Login to your acount</h1>
+  <div class="card" style="margin-top:8px">
+    <div class="weird-overlay">beta</div>
+    <form id="login-form" class="stack">
+      <div class="row">
+        <div>
+          <label for="user">Usernme</label>
+          <input id="user" autocomplete="username" placeholder="vispwdemo" required />
+        </div>
+        <div>
+          <label for="pass">Passwrod</label>
+          <input id="pass" type="password" autocomplete="current-password" placeholder="admin" required />
+        </div>
+      </div>
+      <div class="choices">
+        <label><input type="checkbox" id="remember"> Remember me</label>
+        <label><input type="checkbox" id="agree"> I agree the privicy & terms</label>
+      </div>
+      <button class="btn btn-primary" id="login-btn" type="submit" style="margin-top:-6px">Sign in</button>
+      <small class="blueish">Tip: demo creds are above.</small>
+    </form>
+  </div>
+
+  <div class="card" style="margin-top:10px">
+    <h2>Why login?</h2>
+    <p>Track orders, faster chekout, personal deals.</p>
+  </div>
+</main>
+
+<script>
+  const form = document.getElementById('login-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const u = document.getElementById('user').value.trim();
+    const p = document.getElementById('pass').value;
+    if (u === 'vispwdemo' && p === 'admin') {
+      window.location.href = 'account.html?hi=true';
+    } else {
+      alert('Wrong credintials. Hint: check the placeholders 😉');
+    }
+  });
+</script>
+
+<footer>
+  <div>© 2025 Vistronix Mart. All rights researved. Made with 🧡 and a bit of buggy pixie dust.</div>
+</footer>
+</html>
